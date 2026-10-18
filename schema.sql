@@ -1,0 +1,43 @@
+CREATE DATABASE IF NOT EXISTS warehouse_site CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE warehouse_site;
+
+CREATE TABLE IF NOT EXISTS categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  category_id INT NOT NULL,
+  name VARCHAR(150) NOT NULL,
+  quantity INT NOT NULL DEFAULT 0,
+  min_quantity INT NOT NULL DEFAULT 5,
+  unit VARCHAR(30),
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS issue_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  item_id INT NOT NULL,
+  requester_name VARCHAR(100) NOT NULL,
+  quantity INT NOT NULL,
+  receiver_name VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS alerts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  item_id INT NOT NULL,
+  message VARCHAR(255) NOT NULL,
+  is_read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+INSERT IGNORE INTO categories (id, name) VALUES (1, 'قرطاسية'), (2, 'أجهزة');
+INSERT INTO items (category_id, name, quantity, min_quantity)
+SELECT * FROM (SELECT 1 AS c, 'أقلام حبر' AS n, 40 AS q, 10 AS m
+  UNION ALL SELECT 1, 'ورق A4 (رزمة)', 12, 5
+  UNION ALL SELECT 2, 'فلاشات 32GB', 6, 5) s
+WHERE NOT EXISTS (SELECT 1 FROM items);

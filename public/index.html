@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نظام الأرشيف والمستودع</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fbf6ee;--card:#fffdf9;--tx:#2b2118;--mut:#85766a;--bd:#eadfce;--ac:#0f766e;--ac2:#f59e0b;--acx:#fff;--bad:#c2410c;--badbg:#fff1e8;--ok:#0f766e;--okbg:#e6f6f3;--sh:0 1px 2px rgba(60,40,10,.06),0 10px 24px rgba(60,40,10,.08)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14100c;--card:#1d1812;--tx:#f3ebe0;--mut:#b3a595;--bd:#302820;--ac:#2dd4bf;--ac2:#fbbf24;--acx:#0b1412;--bad:#ff8a6b;--badbg:#3a1d15;--ok:#5eead4;--okbg:#10302b;--sh:0 1px 2px rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--bg:#14100c;--card:#1d1812;--tx:#f3ebe0;--mut:#b3a595;--bd:#302820;--ac:#2dd4bf;--ac2:#fbbf24;--acx:#0b1412;--bad:#ff8a6b;--badbg:#3a1d15;--ok:#5eead4;--okbg:#10302b;--sh:0 1px 2px rgba(0,0,0,.5)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);background-image:radial-gradient(var(--bd) 1px,transparent 1px);background-size:22px 22px;color:var(--tx);font-family:"Tajawal","Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;line-height:1.7}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+@keyframes grow{from{width:0}}
+@keyframes beat{0%,100%{box-shadow:0 0 0 0 rgba(194,65,12,.35)}50%{box-shadow:0 0 0 8px rgba(194,65,12,0)}}
+@keyframes pop{from{opacity:0;transform:translate(-50%,20px) scale(.95)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+header{padding:12px 12px 0}
+.hero{position:relative;overflow:hidden;max-width:900px;margin:auto;padding:26px 20px;border-radius:24px;color:var(--acx);background:linear-gradient(135deg,var(--ac) 0%,var(--ac) 45%,var(--ac2) 150%);box-shadow:var(--sh);display:flex;align-items:center;gap:16px;animation:up .6s both}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.14)}
+.hero::before{width:180px;height:180px;top:-70px;left:-40px}
+.hero::after{width:110px;height:110px;bottom:-50px;left:120px}
+.hero .box{font-size:3.2rem;animation:bob 3.2s ease-in-out infinite;position:relative;z-index:1}
+.hero div{position:relative;z-index:1}
+#greet{font-size:.95rem;opacity:.9}
+h1{margin:0;font-size:1.8rem;font-weight:800;line-height:1.3}
+.hero p{margin:2px 0 0;opacity:.92;font-size:.95rem}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:16px 12px}
+nav button{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 22px;border-radius:999px;cursor:pointer;font:inherit;font-weight:500;box-shadow:var(--sh);transition:transform .15s}
+nav button:hover{transform:translateY(-2px)}
+nav button.on{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+main{max-width:900px;margin:auto;padding:0 12px 20px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:var(--sh);animation:up .5s both}
+h2{font-size:1.08rem;font-weight:700;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:6px;height:20px;border-radius:4px;background:linear-gradient(var(--ac),var(--ac2))}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 150px}
+input,select,button.b{font:inherit;padding:11px 14px;border:1.5px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);min-width:0;transition:border-color .15s}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 20%,transparent)}
+button.b{background:var(--ac);color:var(--acx);border-color:var(--ac);cursor:pointer;font-weight:700;transition:transform .12s,filter .15s}
+button.b:hover{filter:brightness(1.1)}button.b:active{transform:scale(.96)}
+button.s{background:none;border:1px solid var(--bd);color:var(--mut);border-radius:10px;padding:2px 10px;cursor:pointer;font:inherit}
+button.s:hover{color:var(--bad);border-color:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:12px;text-align:center;box-shadow:var(--sh);animation:up .5s both}
+.stat i{font-style:normal;font-size:1.3rem}
+.stat b{display:block;font-size:1.9rem;font-weight:800;line-height:1.2}
+.stat span{color:var(--mut);font-size:.85rem}
+.stat.bad{background:var(--badbg);border-color:var(--bad)}.stat.bad b{color:var(--bad)}
+.stat.ok b{color:var(--ok)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.item{background:var(--bg);border:1.5px solid var(--bd);border-radius:18px;padding:14px;animation:up .5s both;transition:transform .15s}
+.item:hover{transform:translateY(-3px)}
+.item.lowc{border-color:var(--bad);animation:up .5s both,beat 2.2s infinite}
+.ih{display:flex;justify-content:space-between;align-items:center}
+.em{font-size:1.9rem}
+.in{font-weight:700;margin-top:4px}
+.ic{color:var(--mut);font-size:.82rem}
+.iq{display:flex;align-items:baseline;gap:8px;margin:8px 0 6px}
+.iq b{font-size:1.7rem;font-weight:800}
+.iq span{font-size:.8rem;color:var(--ok)}
+.lowc .iq span,.lowc .iq b{color:var(--bad)}
+.bar{height:8px;border-radius:99px;background:var(--bd);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ok),var(--ac2));animation:grow .9s both}
+.lowc .bar i{background:var(--bad)}
+.item small{color:var(--mut);font-size:.78rem}
+.f{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px dashed var(--bd)}
+.f:last-child{border-bottom:0}
+.f small{color:var(--mut)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:420px}
+th,td{padding:10px 8px;text-align:right;border-bottom:1px dashed var(--bd)}
+th{color:var(--mut);font-weight:500;font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.alert{background:var(--badbg);color:var(--bad);border:1.5px solid var(--bad);border-radius:18px;padding:12px 16px;margin-bottom:14px;font-weight:700;animation:beat 2.2s infinite}
+.empty{color:var(--mut);padding:14px 0;text-align:center}
+pre{direction:ltr;text-align:left;overflow-x:auto;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:12px;font-size:.8rem;margin:0}
+footer{text-align:center;color:var(--mut);font-size:.85rem;padding:6px 12px 30px}
+#toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ac);color:var(--acx);padding:12px 22px;border-radius:14px;display:none;z-index:9;max-width:90%;box-shadow:var(--sh);font-weight:700;animation:pop .3s both}
+#toast.warn{background:var(--bad);color:#fff}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:520px){.hero{padding:20px 14px}.hero .box{font-size:2.4rem}h1{font-size:1.4rem}}
+</style>
+</head>
+<body>
+<header><div class="hero"><span class="box">📦</span><div><div id="greet"></div><h1>نظام المستودع</h1><p>كل صنف في مكانه، وكل صرف مسجّل</p></div></div></header>
+<main>
+
+<section id="w" class="on">
+<div id="stats" class="stats"></div>
+<div id="wbanner"></div>
+<div class="card"><h2>طلب صرف</h2>
+<div class="row">
+<select id="wi"></select>
+<input id="wn" placeholder="اسم الطالب" maxlength="100">
+<input id="wq" type="number" min="1" step="1" placeholder="العدد">
+<input id="wr" placeholder="اسم المسلِّم" maxlength="100">
+<button class="b" id="wissue">صرف</button>
+</div></div>
+<div class="card"><h2>الأصناف</h2><div class="tw" id="wtable"></div></div>
+<div class="card"><h2>إضافة صنف</h2>
+<div class="row">
+<input id="nc" placeholder="التصنيف" maxlength="60">
+<input id="nn" placeholder="اسم الصنف" maxlength="100">
+<input id="nq" type="number" min="0" step="1" placeholder="الكمية">
+<input id="nm" type="number" min="0" step="1" placeholder="الحد الحرج">
+<button class="b" id="nadd">إضافة</button>
+</div></div>
+<div class="card"><h2>سجل الصرف</h2><div class="tw" id="wlog"></div></div>
+<div class="card"><h2>سجل التنبيهات</h2><div id="walerts"></div></div>
+</section>
+
+</main>
+<footer>صُنع بحب 🤍 · نظام المستودع</footer>
+<div id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clean=s=>String(s||'').replace(/[<>]/g,'').trim().slice(0,150);
+function toast(m){const t=$('toast');t.textContent=m;t.className=m.includes('⚠️')?'warn':'';t.style.display='block';t.style.animation='none';void t.offsetWidth;t.style.animation='';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3200)}
+async function api(u,o){let r,j={};try{r=await fetch(u,o);j=await r.json().catch(()=>({}))}catch(e){throw new Error('تعذر الاتصال بالخادم')}if(!r.ok)throw new Error(j.error||'حدث خطأ');return j}
+
+/* ---------- المستودع ---------- */
+let S={items:[],reqs:[],alerts:[]};
+async function loadW(){try{const[i,r,a]=await Promise.all([api('/api/items'),api('/api/requests'),api('/api/alerts')]);S={items:i,reqs:r,alerts:a}}catch(e){toast(e.message)}renderW()}
+function renderW(){
+  const low0=S.items.filter(i=>i.qty<=i.min).length;const st=[['الأصناف','📦',S.items.length,''],['إجمالي الكمية','🧮',S.items.reduce((a,i)=>a+i.qty,0),''],['تحت الحد الحرج','🚨',low0,low0?'bad':'ok'],['طلبات الصرف','🧾',S.reqs.length,'']];$('stats').innerHTML=st.map(x=>`<div class="stat ${x[3]}"><i>${x[1]}</i><b data-n="${x[2]}">0</b><span>${x[0]}</span></div>`).join('');document.querySelectorAll('#stats b').forEach(b=>{const n=+b.dataset.n;let c=0;const step=Math.max(1,Math.ceil(n/20));const t=setInterval(()=>{c=Math.min(n,c+step);b.textContent=c;if(c>=n)clearInterval(t)},30)});
+    const low=S.items.filter(i=>i.qty<=i.min);
+  $('wbanner').innerHTML=low.length?`<div class="alert">⚠️ تنبيه: أصناف وصلت للحد الحرج: ${low.map(i=>esc(i.name)+' ('+i.qty+')').join('، ')}</div>`:'';
+  $('wi').innerHTML=S.items.map(i=>`<option value="${i.id}">${esc(i.name)} — المتوفر ${i.qty}</option>`).join('');
+  const emo=c=>/قرطاس/.test(c)?'✏️':/جهاز|أجهزة|إلكترون|الكترون/.test(c)?'💻':/نظاف|تنظيف/.test(c)?'🧼':'📦';
+  $('wtable').innerHTML=S.items.length?'<div class="grid">'+S.items.map(i=>{const lw=i.qty<=i.min,pc=Math.max(4,Math.min(100,Math.round(i.qty/Math.max(i.min*3,1)*100)));return `<div class="item ${lw?'lowc':''}"><div class="ih"><span class="em">${emo(i.cat)}</span><button class="s" data-r="${i.id}" title="حذف">✕</button></div><div class="in">${esc(i.name)}</div><div class="ic">${esc(i.cat)}</div><div class="iq"><b>${i.qty}</b><span>${lw?'⚠️ وصل الحد الحرج':'متوفر'}</span></div><div class="bar"><i style="width:${pc}%"></i></div><small>الحد الحرج: ${i.min}</small></div>`}).join('')+'</div>':'<div class="empty">📭 المستودع فاضي، أضف أول صنف من الأسفل</div>';
+  $('wlog').innerHTML=S.reqs.length?'<table><tr><th>التاريخ</th><th>الصنف</th><th>الطالب</th><th>العدد</th><th>المسلِّم</th></tr>'+S.reqs.map(r=>`<tr><td>${esc(r.at)}</td><td>${esc(r.item)}</td><td>${esc(r.by)}</td><td>${r.qty}</td><td>${esc(r.rcv)}</td></tr>`).join('')+'</table>':'<div class="empty">🧾 ما فيه طلبات صرف بعد</div>';
+  $('walerts').innerHTML=S.alerts.length?S.alerts.map(a=>`<div class="f"><span>${esc(a.msg)}</span><small>${esc(a.at)}</small></div>`).join(''):'<div class="empty">✅ كل شيء بخير، ما فيه تنبيهات</div>';
+}
+const post=(u,b)=>api(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+$('wissue').onclick=async()=>{
+  const by=clean($('wn').value),rcv=clean($('wr').value),qty=$('wq').value;
+  if(!$('wi').value||!by||!rcv||!qty)return toast('عبّ كل الحقول');
+  try{const r=await post('/api/issue',{item_id:$('wi').value,by,rcv,qty});toast(r.alert||'تم الصرف ✓');$('wn').value='';$('wq').value='';$('wr').value='';loadW()}catch(e){toast(e.message)}
+};
+$('nadd').onclick=async()=>{
+  try{await post('/api/items',{cat:clean($('nc').value),name:clean($('nn').value),qty:$('nq').value,min:$('nm').value});['nc','nn','nq','nm'].forEach(k=>$(k).value='');loadW()}catch(e){toast(e.message)}
+};
+$('wtable').onclick=async e=>{const r=e.target.dataset.r;if(r&&confirm('حذف الصنف؟')){try{await api('/api/items/'+encodeURIComponent(r),{method:'DELETE'});loadW()}catch(er){toast(er.message)}}};
+
+loadW();
+const hr=new Date().getHours();$('greet').textContent=hr<12?'صباح الخير ☀️':hr<18?'نهارك سعيد 🌤️':'مساء الخير 🌙';
+</script>
+</body>
+</html>
